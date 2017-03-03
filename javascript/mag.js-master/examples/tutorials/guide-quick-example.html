@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html lang="en-US" >
+    <head>        
+        <meta charset="UTF-8">
+      <link rel="stylesheet" href="//regularjs.github.io/guide/gitbook/style.css">
+        <title>Hello! | Guide for MagJS</title>       
+    </head>
+    <body>
+   
+    <div class="book" data-level="1" data-basepath=".." data-revision="1424935817437">
+    
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header">
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../" >Guide for <a href="https://github.com/magnumjs/mag.js">MagJS</a></a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-gitbook_433">
+                    
+                        <h1 id="quick-example">Quick Example</h1>
+<p>In this Page, we will create our first component —— <strong>HelloMag</strong> . It is used to show a welcome message for people who login. if people aren&#39;t logged in yet, the component will prompt a window. For simplicity, only username is required during the login operation.</p>
+<h2 id="1-initialize-template">1. initialize template</h2>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"hello"</span>&gt;</span>
+  Hello, Guest
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- include mag.js --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"https://rawgit.com/magnumjs/mag.js/master/dist/mag.0.21.2.min.js"</span>&gt;</span><span class="javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="javascript">
+<span class="hljs-comment">//Create your first module:</span>
+<span class="hljs-keyword">var</span> HelloModule = {view:function(){}}
+
+<span class="hljs-comment">//Create Your First Component:</span>
+<span class="hljs-keyword">var</span> HelloMag = mag.create(
+  <span class="hljs-string">'hello'</span>,
+  HelloModule
+);
+
+<span class="hljs-comment">//Initialize component:</span>
+<span class="hljs-keyword">var</span> component = <span class="hljs-keyword"></span> HelloMag({
+  data: {username: <span class="hljs-string">"leeluolee"</span>}
+});
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+</code></pre>
+<p><strong>RESULT</strong></p>
+<iframe width="100%" height="300" src="http://jsfiddle.net/3cod88m4/embedded/result,js,html,resources" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+
+<ul>
+<li><p><strong><code>mag.create</code></strong></p>
+<p>mag.create will create a Component that can be executed.</p>
+</li>
+<li><p><code>template Id</code></p>
+<p>a Component needs a template to describe its structure.</p>
+</li>
+<li><p><code>data/props</code></p>
+<p>component&#39;s model, but it is just a Plain Object.  the <code>data</code> passed to <code>new Component</code> and the <code>data</code> passed to <code>mag.create</code> are merged.</p>
+</li>
+</ul>
+
+                      
+<h2 id="2-using-__interpolation__-to-show-users-name">2. Using <strong>interpolation</strong> to show user&#39;s name</h2>
+<p>This component only shows static message until now, we should make it live by using <strong>interpolation</strong>.</p>
+<pre><code class="lang-html">  Hello, &lt;username/&gt;
+</code></pre>
+<p><strong>RESULT</strong></p>
+<iframe width="100%" height="300" src="http://jsfiddle.net/ofsz5j6f/embedded/result,js,html,resources" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2 id="3-using-ifelse-to-show-other-message-if-the-user-is-not-logged-in">3. using <code>if/else</code> to show other message if the user is not logged in</h2>
+<pre><code class="lang-xml">if(props.username){
+  state.b = props.username
+  state.guest = null;   
+} else {
+  state.user = null;
+}
+</code></pre>
+<p>Null removes the element.</p>
+<p><strong>RESULT</strong></p>
+<iframe width="100%" height="300" src="http://jsfiddle.net/b02hyay6/1/embedded/result,js,html,resources" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+
+
+<h2 id="4-implement-the-loginlogout--by-event">4. Implement the <code>Login/Logout</code>  by event</h2>
+<p>In this step , we need to add two events to deal with the <strong>Login</strong> and <strong>Logout</strong> operation.</p>
+<pre><code class="lang-html">&lt;div id="hello"&gt;
+    &lt;div class="user"&gt&lt;span&gtHello, &lt;b&gt{username}&lt;/b&gt. 
+        &lt;a href='#'&gtLogout&lt;/a&gt
+        &lt;/span&gt
+    &lt;/div&gt
+    &lt;div class="guest"&gt&lt;span&gtSorry, Guest. 
+        Please &lt;a href='#'&gtLogin&lt;/a&gt
+        &lt;/span&gt
+    &lt;/div&gt
+&lt;/div&gt
+</code></pre>
+<blockquote>
+<h5>Tips</h5>
+
+<p>in <a href="https://github.com/magnumjs/mag.js">MagJS</a>,  the <code>_on</code> prefixed attribute will be considered as a native JavaScript event <a href="#">ui event</a>
+</p>
+</blockquote>
+<p>we add two operations in the template above:</p>
+<p><strong>Login</strong>: the keyword <code>this</code> in the template just point to the <code>component</code> itself. so we need to add a method named <strong>login</strong> in  HelloMag module.</p>
+<p><strong>Logout</strong>: the model&#39;s root in template points to <code>component.props</code> . so in this example, we just simply clear the username in <code>props</code>.</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> HelloModule = {
+  view: function(state, props) {
+    if (props.username) {
+      state.user = {
+        a: {
+          _onClick: function() {
+            props.username = ''
+          }
+        }
+      }
+      state.b = props.username
+      state.guest = null;
+    } else {
+      state.guest = {
+        a: {
+          _onClick: function() {
+            props.username = prompt("please enter your username", "")
+          }
+        }
+      }
+      state.user = null;
+    }
+  }
+}
+</code></pre>
+<p><strong>RESULT</strong></p>
+<iframe width="100%" height="300" src="http://jsfiddle.net/8r73ab2p/1/embedded/result,js,html,resources" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+
+
+<h2 id="5-when-the-components-digest-phase-will-be-triggered">5. when the component&#39;s redraw phase will be triggered</h2>
+<p> <a href="https://github.com/magnumjs/mag.js">MagJS</a>&#39;s data-binding is based on observing the state and props objects. some builtin (.e.g event, onClick) will trigger the component&#39;s redraw phase automatically. you can also trigger the redraw manually using <a href="#">component.draw</a></p>
+
+                      
+<p>just like the example above, the usage of <code>state</code> is flexible.</p>
+
+<blockquote>
+<p>no matter how you use the <code>state</code>. the component will always enter into the redraw phase when props or state is changed.</p>
+</blockquote>
+<h2 id="summary">Summary</h2>
+<p>In this chapter, we create a super simple component named HelloMag.</p>
+<p>you can consider  <a href="https://github.com/magnumjs/mag.js">MagJS</a>&#39;s component as a small <code>mvvm</code> realization.</p>
+<ul>
+<li>independent lifecycle</li>
+<li>the view based on template</li>
+<li>the model is <strong>Plain Object</strong></li>
+<li>the component itself is just like the viewmodel</li>
+</ul>
+<p>you can also check the more comprehensive example——<a href="http://jsfiddle.net/8tfLokg0/" target="_blank">Login/logout with undo</a>.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+        
+    </body>
+    
+</html>

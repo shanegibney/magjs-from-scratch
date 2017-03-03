@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/picnic.min.css" rel="stylesheet">
+    <!-- <script src="//rawgit.com/magnumjs/mag.js/master/mag.min.js"></script> -->
+    <meta charset="utf-8">
+    <title>Mag.JS app</title>
+    <script type="text/javascript" src="javascript/mag.min.js"></script>
+    <script type="text/javascript" src="javascript/mag.addons.js"></script>
+</head>
+
+<body>
+    <div id="slider">
+        <input type="range" name="val" min="-5" max="5" step="0.001"> Value:
+        <val></val>
+        <br/> Number of readings:
+        <readings></readings>
+    </div>
+    <div id="chunk1">
+        <h1>Menu examples</h1>
+        <a href="https://youtu.be/xdjPez4oOTA">Mag.JS - elegant dom bindings - nav menu</a>
+        <ul class="menulist">
+            <li class="menuitem"></li>
+        </ul>
+        <p>Selected: <b></b></p>
+    </div>
+
+    <h1>Simple Maths</h1>
+    <a href="https://youtu.be/QEnyWHSsMFg?list=PLtWfKzAMcA-hcOkgjW3onCBM6vBw-PDOf">magjs simple math example</a>
+    <div id="demo">
+        <h2>Simple arithmetic</h2>
+        <div class="numbers">
+            <label>First number: </label>
+            <input type="text" name="num1">
+            <label>Second number:</label>
+            <input type="text" name="num2">
+            <br/>
+            <num1></num1> +
+            <num2></num2> =
+            <result></result>
+            <br/>
+            <num1></num1> -
+            <num2></num2> =
+            <subtract></subtract>
+            <br/>
+            <num1></num1> x
+            <num2></num2> =
+            <mult></mult>
+            <br/>
+            <num1></num1> /
+            <num2></num2> =
+            <division></division>
+            <br/> You performed
+            <num></num> calculations.
+        </div>
+    </div>
+    <!-- <script src="//rawgit.com/magnumjs/mag.js/master/src/old/mag.addons.js"></script> -->
+    <script>
+        var slider = {};
+        slider.controller = function(props) {
+            mag.addons.merge(props, this);
+            this.value = props.value;
+            this.readings = props.sweep.readings;
+
+            // this.val = props.sweep.val;
+        };
+        slider.view = function(state, props) {
+            console.log(state);
+            state.input = {
+                _config: function() {
+                    mag.addons.merge(props, state);
+                },
+
+                _oninput: function() {
+                    state.val = props.sweep.val;
+                    state.readings += 1;
+                }
+            }
+        };
+        var chunk2 = {};
+        chunk2.controller = function(props) {
+            //conroller is called once, effectively setting default values
+            // console.log(this);
+            mag.addons.merge(props, this);
+            // console.log(this);
+            this.menuitem = props.menuitem;
+            // console.log('this.menuitem ' + this.menuitem);
+            this.focused = props.focused;
+
+            this.clicked = function(e, index) {
+                // console.log(e);
+                this.focused = index; //gets the index of whatever element in the array is clicked
+            }.bind(this);
+        };
+
+        chunk2.view = function(state, props) {
+            // console.log(state.$menuitem); // why is this logged twice? Because
+            state.b = state.menuitem[state.focused];
+            //
+            state.$menuitem = {
+                // _config: function(node, isNew, context, index) {
+                _config: function(node, isNew, context, index) {
+                    // console.log("node ", node, ", isNew ", isNew, ", context ", context, ", index ", index);
+                    // console.log("help");
+                    node.classList.toggle('focus', state.focused === index);
+                },
+                _onclick: state.clicked
+            };
+
+        };
+
+        var demo2 = {};
+        demo2.controller = function(props) {
+            mag.addons.merge(props, this);
+            this.result = parseInt(props.numbers.num1) + parseInt(props.numbers.num2);
+            this.subtract = parseInt(props.numbers.num1) - parseInt(props.numbers.num2);
+            this.mult = parseInt(props.numbers.num1) * parseInt(props.numbers.num2);
+            this.division = parseInt(props.numbers.num1) / parseInt(props.numbers.num2);
+            this.num = props.numbers.num;
+            // this.num1 = 2;
+            // this.num2 = 4;
+        }
+        demo2.view = function(state, props) {
+            state.input = {
+                _config: function() {
+                    mag.addons.merge(props, state);
+                },
+
+                _oninput: function() {
+                    state.result = parseInt(state.numbers.num1) + parseInt(state.numbers.num2);
+                    state.subtract = parseInt(state.numbers.num1) - parseInt(state.numbers.num2);
+                    state.mult = parseInt(state.numbers.num1) * parseInt(state.numbers.num2);
+                    state.division = parseInt(state.numbers.num1) / parseInt(state.numbers.num2);
+                    state.num += 4;
+                    // console.log(this);
+                }
+                // _oninput: function() {
+                //
+                // }
+            }
+            // state.button = {
+            //     //config is like a controller that only matches on this element.
+            //
+            //     _oninput: function() {
+            //         state.result = parseInt(state.num1) + parseInt(state.num2);
+            //     }
+            // }
+        }
+
+        var props = {
+            numbers: {
+                num1: 54,
+                num2: 3,
+                num: 4
+            },
+            focused: 1,
+            menuitem: ['Home', 'Services', 'About', 'Contact us'],
+            sweep: {
+                val: 0,
+                readings: 0
+            },
+
+        };
+        mag.module("slider", slider, props);
+        mag.module("demo", demo2, props);
+        mag.module("chunk1", chunk2, props);
+    </script>
+</body>
